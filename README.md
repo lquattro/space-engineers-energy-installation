@@ -10,12 +10,16 @@ This script is at the beginning and for now it has only two elements:
 This script is set to display the desired values on any lcd screen with special tag names:
 * Solar Panel: 
 ```
-[SC LCD SOLAR]
+[SE LCD SOLAR]
 ```
 * Solar Panel: 
 ```
-[SC LCD BATTERY]
+[SE LCD BATTERY]
 ```
+
+## Details :
+* Solar panel informations : Number panels, Total Collected kW, Panel Average kW, Panels Efficacity %, Best Panel kW
+* Battery informations : Number batteries, Total Collected kW
 
 ## LICENSE
 
