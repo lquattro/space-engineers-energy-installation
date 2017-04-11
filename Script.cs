@@ -1,5 +1,4 @@
 ﻿static HashSet<IMyInventory> invenLocked = new HashSet<IMyInventory>();
-// static List<IMyInventoryItem> stacks;
 static float maxCollectedSolarPanel = 120;
 float previousEnergyBattery = 0;
 DateTime previousTime; 
@@ -45,7 +44,7 @@ public void Main(string argument) {
     // Calculate Solars
     float maxPowerSolar = 0;
     float solars = 0;
-    for (int i=0; i < solarPanels.Count; i++){ 
+    for (int i=0; i < solarPanels.Count; i++){     
         solars += solarPanels[i].MaxOutput;
         if ( maxPowerSolar < solarPanels[i].MaxOutput ) {
             maxPowerSolar = solarPanels[i].MaxOutput;
@@ -70,12 +69,17 @@ public void Main(string argument) {
     float reacts = 0;
     float uraAmount = 0;
     IMyInventory inven;
-    IMyInventoryItem invenItem;
+    List<IMyInventoryItem> invenItem;
+    //  Calculate Uranium in all Reactors
     foreach  ( IMyReactor reactor in reactors ) {
-        //  Calculate Uranium in this Reactor
+        // Get the inventory in reactor (only one for a reactor)
         inven = (IMyInventory) reactor.GetInventory(0);
-        invenItem = (IMyInventoryItem) inven.GetItems()[0];
-        uraAmount += (float) invenItem.Amount;
+        // Get list items in inventory (only uranium)
+        invenItem = (List<IMyInventoryItem>) inven.GetItems();
+        // Set Uranium amount with all amount items
+        foreach ( IMyInventoryItem item in invenItem ) {
+            uraAmount += (float) item.Amount;
+        }
         // Calculate Reactor Power
         reacts += reactor.CurrentOutput;
     }
