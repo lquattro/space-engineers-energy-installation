@@ -20,11 +20,11 @@ public void Main(string argument) {
      * Variables texts
      */ 
     string textClock = "                                    Clock: ";
-    string textBattery = "\n---==Battery Energy==---";
-    string textSolar = "\n---==Solar Energy==---";
-    string textConso = "\n---==Conso Energy==---";
-    string textReactor = "\n---==Reactor Energy==---";
-    string textTest = "\n---==Test Energy==---";
+    string textBattery = "---==Battery Energy==---";
+    string textSolar = "---==Solar Energy==---";
+    string textConso = "---==Conso Energy==---";
+    string textReactor = "---==Reactor Energy==---";
+    string textTest = "---==Test Energy==---";
 
     // LCD Panels
     List<IMyTextPanel> lcds = new List<IMyTextPanel>();    
@@ -35,7 +35,7 @@ public void Main(string argument) {
     // Battery Batteries
     List<IMyBatteryBlock> batteries = new List<IMyBatteryBlock>();    
     GridTerminalSystem.GetBlocksOfType<IMyBatteryBlock>(batteries);
-    // Battery Reactors
+    // Battery Reactor
     List<IMyReactor> reactors = new List<IMyReactor>();     
     GridTerminalSystem.GetBlocksOfType<IMyReactor>(reactors);
     // All Block Thrust
@@ -98,26 +98,25 @@ public void Main(string argument) {
     textReactor += "\nTotal kW: " + reacts * 1000;
     textReactor += "\nTotal Nb Uranium: " + uraAmount;
 
+    // Set Dictorary Map for data :  Module to Text
+    Dictionary<string,string> dataModule = new Dictionary<string,string> { {"CLOCK", textClock}, {"SOLAR",textSolar}, {"BATTERY",textBattery},
+             {"CONSO",textConso}, {"REACTOR",textReactor} };
+
+    // Set Text in all LCD panels
     foreach ( IMyTextPanel lcd in lcds ) {
         // Exit if not contain tag mod SE
-        if ( !lcd.CustomName.Contains("SE") ) {
+        string lcdName = lcd.CustomName;
+        if ( !lcdName.Contains("[SE]") ) {
             continue;
         }
+        
+        string[] modules = lcdName.Split(';');
         string text = "";
-        if ( lcd.CustomName.Contains("CLOCK") ) { 
-            text += textClock; 
-        }
-        if ( lcd.CustomName.Contains("SOLAR") ) {
-            text += textSolar;
-        }
-        if ( lcd.CustomName.Contains("BATTERY") ) {
-            text += textBattery;
-        }
-        if ( lcd.CustomName.Contains("CONSO") ) { 
-            text += textConso;
-        }
-        if ( lcd.CustomName.Contains("REACTOR") ) {  
-            text += textReactor; 
+        string outText = "";
+        // Write Text with order tag nameLCD
+        foreach ( string module in modules ) {
+            if ( !dataModule.TryGetValue( module.ToUpper(), out outText ) ) continue;
+            text += outText + "\n";
         }
 
         // Write test in displays
